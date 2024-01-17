@@ -1,0 +1,42 @@
+// Symbol table
+// Scope level 0:
+//	Symbol Name       Page Address
+//	----------------  ------------
+//	TheWheel          1000
+//	defaultValue      100C
+//	psw2              1011
+//	psw3              1015
+//	psw4              1019
+//	LOOPARRAY         101C
+//	skip              1024
+//	delayLoop         1027
+//	skip1             1030
+//	done              1035
+//	ARRAY             1044
+//	physicalSwitches  1053
+//	sixteen           1054
+//	toAscii           1055
+//	buttons           1056
+//	hexDisplay        1057
+//	ms                1058
+//	delay             1059
+//	delay2            105A
+//	delay3            105B
+//	delay4            105C
+//	maxDelay          105D
+//	string            105E
+//	save0             106C
+//	save1             106D
+//	save2             106E
+//	save3             106F
+//	save4             1070
+//	save5             1071
+//	save6             1072
+//	save7             1073
+//	save01            1074
+//	save03            1075
+//	save07            1076
+//	delaySub          1077
+//	masterDelay       107E
+//	resultString      1085
+

@@ -1,0 +1,153 @@
+ Addr: OPCODE   LineNo: Source
+x1000: x326c         8:                  ST  R1, save1
+x1001: x346c         9:                  ST  R2, save2
+x1002: x366c        10:                  ST  R3, save3
+x1003: x386c        11:                  ST  R4, save4
+x1004: x3a6c        12:                  ST  R5, save5
+x1005: x3c6c        13:                  ST  R6, save6
+x1006: x3e6c        14:                  ST  R7, save7
+x1007: x5b60        16:                  AND  R5, R5, #0
+x1008: x1b6f        17:                  ADD  R5, R5, #15         ; Giver R5 værdien 15, for at kunne loope 15 gange senere
+x1009: xe23a        18:                  LEA  R1, ARRAY           ; Loader addressen på ARRAY ind i R1
+x100a: x2c49        19:                  LD  R6, sixteen          ; Henter -16 ind i R6
+x100b: x244d        23:                  LD  R2, delay            ;Loader værdien fra delay ind i R2
+x100c: xa646        26:                  LDI  R3, physicalSwitches
+x100d: x58e1        27:                  AND  R4, R3, #1      ; Bruger AND for at se hvilket bit er value 1, her er det for at tjekke 0001
+x100e: x0c02        28:                  BRnz  psw2
+x100f: x2449        29:                  LD  R2, delay
+x1010: x0e0b        30:                  BRnzp  LOOPARRAY     ; Kører ned til LOOPARRAY med den givne delay i dette tilfælde, og starter hjulet		
+x1011: x58e2        33:                  AND  R4, R3, #2      ; For at tjekke 0010
+x1012: x0c02        34:                  BRnz  psw3  
+x1013: x2446        35:                  LD  R2, delay2
+x1014: x0e07        36:                  BRnzp  LOOPARRAY     ; Kører ned til LOOPARRAY med den givne delay i dette tilfælde, og starter hjulet	
+x1015: x58e4        38:                  AND  R4, R3, #4      ; For at tjekke 0100
+x1016: x0c02        39:                  BRnz  psw4 
+x1017: x2443        40:                  LD  R2, delay3
+x1018: x0e03        41:                  BRnzp  LOOPARRAY     ; Kører ned til LOOPARRAY med den givne delay i dette tilfælde, og starter hjulet	
+x1019: x58e8        43:                  AND  R4, R3, #8      ; For at tjekke 1000
+x101a: x0df1        44:                  BRnz  defaultValue
+x101b: x2440        45:                  LD  R2, delay4       ; Sidste form for "fart" på hjulet
+x101c: x6040        49:                  LDR  R0, R1, #0      ; Henter værdien på addresse "ARRAY", og ligger ind i R0
+x101d: xb039        50:                  STI  R0, hexDisplay  ; Gemmer værdien fra addresse "xFE12", og ligger ind R0
+x101e: x4858        51:                  JSR  delaySub
+x101f: x1261        53:                  ADD  R1, R1, #1      ; Inkrementere i ARRAY
+x1020: x1b7f        54:                  ADD  R5, R5, #-1     ; -1 på counter
+x1021: x0202        55:                  BRp  skip            ; Så længe counteren ikke er nul
+x1022: x1b6f        56:                  ADD  R5, R5, #15     ; Refiller counteren med 15
+x1023: xe220        57:                  LEA  R1, ARRAY       ; Loader addressen på ARRAY ind i R1
+x1024: xa631        60:                  LDI  R3, buttons     ; Henter værdien fra buttons (xFE0E), og ligger det ind R3
+x1025: x56c6        61:                  AND  R3, R3, R6      ; Vi tjekker om spacebar er trykket, ved at minusse med 16, på værdien i buttons
+x1026: x05f5        62:                  BRz  LOOPARRAY       ; Går først videre når den er 0
+x1027: x6040        66:                  LDR  R0, R1, #0      ; Henter værdien på addresse "ARRAY", og ligger ind i R0
+x1028: xb02e        67:                  STI  R0, hexDisplay  ; Gemmer værdien fra addresse "xFE12", og ligger ind R0
+x1029: x484d        68:                  JSR  delaySub
+x102a: x14af        69:                  ADD  R2, R2, #15     ;Delay bliver 15 større
+x102b: x1261        70:                  ADD  R1, R1, #1      ; Inkrementere i ARRAY
+x102c: x1b7f        71:                  ADD  R5, R5, #-1     ; -1 på counter
+x102d: x0202        72:                  BRp  skip1            ; Så længe counteren ikke er nul
+x102e: x1b6f        73:                  ADD  R5, R5, #15     ; Refiller counteren med 15
+x102f: xe214        74:                  LEA  R1, ARRAY       ; Loader addressen på ARRAY ind i R1
+x1030: x262c        77:                  LD  R3, maxDelay
+x1031: x96ff        78:                  NOT  R3, R3
+x1032: x16e1        79:                  ADD  R3, R3, #1
+x1033: x16c2        80:                  ADD  R3, R3, R2
+x1034: x0df2        81:                  BRnz  delayLoop
+x1035: x1220        84:                  ADD  R1, R0, #0	       ; Hjulets værdi ligges over i R1
+x1036: xe04e        85:                  LEA  R0, resultString   
+x1037: xf022        86:                  PUTS 		       ; Printer resultString, som printer resultat af hvad hjulet ender på
+x1038: x261c        87:                  LD  R3, toAscii         ; Konverterer om til ASCII værdi, da værdien er i Hex           
+x1039: x1043        88:                  ADD  R0, R1, R3	       ; Ligger den konverteret sammen med den ukonverteret værdi, og ender med resultatet i ASCII på R0
+x103a: xf021        89:                  OUT 
+x103b: x1060        90:                  ADD  R0, R1, #0
+x103c: x2230        91:                  LD  R1, save1
+x103d: x2430        92:                  LD  R2, save2
+x103e: x2630        93:                  LD  R3, save3
+x103f: x2830        94:                  LD  R4, save4
+x1040: x2a30        95:                  LD  R5, save5
+x1041: x2c30        96:                  LD  R6, save6
+x1042: x2e30        97:                  LD  R7, save7
+x1043: xc1c0        98:                  RET 
+x1044: x0001       102:            ARRAY .FILL  #1       ;Fylder array med værdier
+x1045: x0002       103:                  .FILL  #2
+x1046: x0003       104:                  .FILL  #3
+x1047: x0004       105:                  .FILL  #4
+x1048: x0005       106:                  .FILL  #5
+x1049: x0001       107:                  .FILL  #1
+x104a: x0002       108:                  .FILL  #2
+x104b: x0003       109:                  .FILL  #3
+x104c: x0004       110:                  .FILL  #4    
+x104d: x0005       111:                  .FILL  #5
+x104e: x0006       112:                  .FILL  #6
+x104f: x0001       113:                  .FILL  #1
+x1050: x0002       114:                  .FILL  #2
+x1051: x0003       115:                  .FILL  #3
+x1052: x0004       116:                  .FILL  #4
+x1053: xfe0b       118: physicalSwitches .FILL  xFE0B
+x1054: x0010       119:          sixteen .FILL  x10   
+x1055: x0030       120:          toAscii .FILL  x30
+x1056: xfe0e       121:          buttons .FILL  xfe0e
+x1057: xfe12       122:       hexDisplay .FILL  xfe12
+x1058: xfe1c       123:               ms .FILL  xFE1C
+x1059: x0046       124:            delay .FILL  #70
+x105a: x0096       125:           delay2 .FILL  #150
+x105b: x0113       126:           delay3 .FILL  #275
+x105c: x01f4       127:           delay4 .FILL  #500
+x105d: x03e8       128:         maxDelay .FILL  #1000
+x105e: x0044       129:           string .STRINGZ  "DelayReached\n"
+x105f: x0065       129:           string  
+x1060: x006c       129:           string  
+x1061: x0061       129:           string  
+x1062: x0079       129:           string  
+x1063: x0052       129:           string  
+x1064: x0065       129:           string  
+x1065: x0061       129:           string  
+x1066: x0063       129:           string  
+x1067: x0068       129:           string  
+x1068: x0065       129:           string  
+x1069: x0064       129:           string  
+x106a: x000a       129:           string  
+x106b: x0000       129:           string  
+x106c: x0000       131:            save0 .BLKW  1
+x106d: x0000       132:            save1 .BLKW  1
+x106e: x0000       133:            save2 .BLKW  1
+x106f: x0000       134:            save3 .BLKW  1
+x1070: x0000       135:            save4 .BLKW  1
+x1071: x0000       136:            save5 .BLKW  1
+x1072: x0000       137:            save6 .BLKW  1
+x1073: x0000       138:            save7 .BLKW  1
+x1074: x0000       139:           save01 .BLKW  1
+x1075: x0000       140:           save03 .BLKW  1
+x1076: x0000       141:           save07 .BLKW  1
+x1077: x33fc       145:                  ST  R1, save01
+x1078: x37fc       146:                  ST  R3, save03
+x1079: x3ffc       147:                  ST  R7, save07
+x107a: xa3dd       149:                  LDI  R1, ms      ;Loader værdien fra ms ind i R1
+x107b: x1242       150:                  ADD  R1, R1, R2  ;Ligger de to værdier sammen, ligger delay oveni
+x107c: x927f       151:                  NOT  R1, R1      ;Notter den ene af dem for at kunne trække fra
+x107d: x1261       152:                  ADD  R1, R1, #1  ;Ligger en til pga. Tour-compliment
+x107e: xa7d9       156:                  LDI  R3, ms      ;Loader værdien fra ms ind i R1
+x107f: x1643       157:                  ADD  R3, R1, R3  ;Delay og antal millisekunder bliver lagt sammen
+x1080: x09fd       158:                  BRn  masterDelay ;Bliver ved med at branche hvis det er en minus værdi
+x1081: x23f2       161:                  LD  R1, save01
+x1082: x27f2       162:                  LD  R3, save03
+x1083: x2ff2       163:                  LD  R7, save07
+x1084: xc1c0       164:                  RET 
+x1085: x000a       167:     resultString .STRINGZ  "\nWheel result is: "
+x1086: x0057       167:     resultString  
+x1087: x0068       167:     resultString  
+x1088: x0065       167:     resultString  
+x1089: x0065       167:     resultString  
+x108a: x006c       167:     resultString  
+x108b: x0020       167:     resultString  
+x108c: x0072       167:     resultString  
+x108d: x0065       167:     resultString  
+x108e: x0073       167:     resultString  
+x108f: x0075       167:     resultString  
+x1090: x006c       167:     resultString  
+x1091: x0074       167:     resultString  
+x1092: x0020       167:     resultString  
+x1093: x0069       167:     resultString  
+x1094: x0073       167:     resultString  
+x1095: x003a       167:     resultString  
+x1096: x0020       167:     resultString  
+x1097: x0000       167:     resultString  
