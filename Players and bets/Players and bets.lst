@@ -1,0 +1,537 @@
+ Addr: OPCODE   LineNo: Source
+x0500: xe0e9         5:                  LEA  R0, PROMT
+x0501: xf022         6:                  PUTS 
+x0502: xf020         7:                  GETC 
+x0503: xf021         8:                  OUT 
+x0504: x22c0         9:                  LD  R1, TOINT     ; Vi konvertere næste input til decimal
+x0505: x1201        10:                  ADD  R1, R0, R1
+x0506: x32bf        11:                  ST  R1, TotalPlayers
+x0507: x4815        12:                  JSR  PlayerAmount
+x0508: x2ab6        14:                  LD  R5, TheWheelSR
+x0509: x4140        15:                  JSRR  R5  ; Modtag værdi for hjulet i register
+x050a: x4887        16:                  JSR  Prize
+x050b: x0ffc        17:                  BRnzp  spinAgain
+x050c: xf025        18:                  HALT 
+x050d: x30bc        21:                  ST  R0, Save000 
+x050e: x32bc        22:                  ST  R1, Save001
+x050f: x34bc        23:                  ST  R2, Save002
+x0510: x3ebe        24:                  ST  R7, Save007
+x0511: x20b2        26:                  LD  R0, BetNumber1
+x0512: xf022        27:                  PUTS 
+x0513: xf020        29:                  GETC 
+x0514: xf021        30:                  OUT  
+x0515: x22af        31:                  LD  R1, TOINT     ; Vi konverterer næste input til decimal
+x0516: x1201        32:                  ADD  R1, R0, R1
+x0517: x7340        33:                  STR  R1, R5, #0
+x0518: x20b1        34:                  LD  R0, Save000 
+x0519: x22b1        35:                  LD  R1, Save001
+x051a: x24b1        36:                  LD  R2, Save002
+x051b: x2eb3        37:                  LD  R7, Save007
+x051c: xc1c0        39:                  RET 
+x051d: x30ba        43:                  ST  R0, Save00 
+x051e: x32ba        44:                  ST  R1, Save01
+x051f: x34ba        45:                  ST  R2, Save02
+x0520: x38bb        46:                  ST  R4, Save04
+x0521: x3ebb        47:                  ST  R7, Save07
+x0522: x24a0        48:                  LD  R2, Players
+x0523: x289c        49:                  LD  R4, Balances
+x0524: x2a9d        50:                  LD  R5, WheelBets
+x0525: x269b        51:                  LD  R3, Bets
+x0526: x480c        54:                  JSR  PlayerCreate
+x0527: x14ac        55:                  ADD  R2, R2, #12
+x0528: x1921        56:                  ADD  R4, R4, #1
+x0529: x1b61        57:                  ADD  R5, R5, #1
+x052a: x16e1        58:                  ADD  R3, R3, #1
+x052b: x127f        60:                  ADD  R1, R1, #-1 ;værdi til antal spilere decrementet
+x052c: x03f9        61:                  BRp  cycle
+x052d: x2eaf        62:                  LD  R7, Save07
+x052e: x20a9        63:                  LD  R0, Save00
+x052f: x22a9        64:                  LD  R1, Save01
+x0530: x24a9        65:                  LD  R2, Save02
+x0531: x28aa        66:                  LD  R4, Save04
+x0532: xc1c0        68:                  RET 
+x0533: x309c        72:                  ST  R0, Save0 
+x0534: x329c        73:                  ST  R1, Save1
+x0535: x349c        74:                  ST  R2, Save2
+x0536: x369c        75:                  ST  R3, Save3
+x0537: x389c        76:                  ST  R4, Save4
+x0538: x3a9c        77:                  ST  R5, Save5
+x0539: x3e9d        78:                  ST  R7, Save7
+x053a: xe0d8        80:                  LEA  R0, INTRO   ; Loader intro
+x053b: xf022        81:                  PUTS             ; Viser intro på terminal
+x053c: x56e0        83:                  AND  R3, R3, #0  ; Nulstiller R3
+x053d: x16ea        84:                  ADD  R3, R3, #10 ; Lægger 10 over i R3
+x053e: xf020        87:                  GETC             ; Modtag input fra keyboard
+x053f: xf021        88:                  OUT              ; Viser output i terminal
+x0540: x1836        89:                  ADD  R4, R0, #-10; For at give R4 inputtet "ENTER" fra keyboard i ASCII
+x0541: x0404        90:                  BRz  NameDone
+x0542: x7080        92:                  STR  R0, R2, #0  ; Lægger inputtet fra R0 ind i R2
+x0543: x14a1        93:                  ADD  R2, R2, #1  ; Lægger 1 til inputtet for at tage næste addresse.
+x0544: x16ff        94:                  ADD  R3, R3, #-1 ; Decrementer loop op til 10 gange
+x0545: x03f8        95:                  BRp  STOREPLAYER
+x0546: xe0ed        98:                  LEA  R0, DepositBalance  ; Loader number promt
+x0547: xf022        99:                  PUTS 
+x0548: xf020       100:                  GETC 
+x0549: xf021       101:                  OUT 
+x054a: x287a       102:                  LD  R4,TOINT     ; Vi konvertere fra ASCII til integer/decimal
+x054b: x1100       103:                  ADD  R0, R4, R0  ; Lægger inputtet til den konverterede værdi for at få det rigtige input
+x054c: x1220       104:                  ADD  R1, R0, #0  ; Vi lægger inputtet over i R1
+x054d: x1a60       108:                  ADD  R5, R1, #0  ; Vi lægger inputtet over i R5, som er total
+x054e: xf020       109:                  GETC 
+x054f: xf021       110:                  OUT 
+x0550: x1636       111:                  ADD  R3, R0, #-10; Vi tjekker for "ENTER"
+x0551: x0409       112:                  BRz  DONE
+x0552: x2672       113:                  LD  R3,TOINT     ; Vi konvertere næste input til decimal
+x0553: x10c0       114:                  ADD  R0, R3, R0  ; Lægger inputtet til den konverterede værdi for at få det rigtige input
+x0554: x56e0       115:                  AND  R3, R3, #0  
+x0555: x16e9       116:                  ADD  R3, R3, #9  ; Lægger 9 til R3
+x0556: x1245       120:                  ADD  R1, R1, R5  ; Vi kører loopet 9 gange 
+x0557: x16ff       122:                  ADD  R3, R3, #-1 ; Decrementer counter
+x0558: x03fd       123:                  BRp  TIMES10
+x0559: x1201       124:                  ADD  R1, R0, R1  ; Vi lægger total sammen med inputtet
+x055a: x0ff2       125:                  BRnzp  StoreBalance
+x055b: x2878       128:                  LD  R4, Save4
+x055c: x7300       129:                  STR  R1, R4, #0  ; Store total i Balance
+x055d: x2a77       130:                  LD  R5, Save5
+x055e: x4809       131:                  JSR  PlaceBet
+x055f: x4fad       132:                  JSR  PlaceBetOnWheel
+x0560: x206f       134:                  LD  R0, Save0
+x0561: x226f       135:                  LD  R1, Save1
+x0562: x246f       136:                  LD  R2, Save2
+x0563: x266f       137:                  LD  R3, Save3
+x0564: x286f       138:                  LD  R4, Save4
+x0565: x2a6f       139:                  LD  R5, Save5
+x0566: x2e70       140:                  LD  R7, Save7
+x0567: xc1c0       141:                  RET 
+x0568: x3061       144:                  ST  R0, Save000 
+x0569: x3261       145:                  ST  R1, Save001
+x056a: x3662       146:                  ST  R3, Save003
+x056b: x3a62       147:                  ST  R5, Save005
+x056c: x3e62       148:                  ST  R7, Save007
+x056d: xe0e3       151:                  LEA  R0, DepositBet
+x056e: xf022       152:                  PUTS 
+x056f: xf020       153:                  GETC 
+x0570: xf021       154:                  OUT  
+x0571: x2253       155:                  LD  R1, TOINT     ; Vi konverterer næste input til decimal
+x0572: x1201       156:                  ADD  R1, R0, R1
+x0573: x1a60       159:                  ADD  R5, R1, #0  ; Vi lægger inputtet over i R5, som er total
+x0574: xf020       160:                  GETC 
+x0575: xf021       161:                  OUT 
+x0576: x1636       162:                  ADD  R3, R0, #-10; Vi tjekker for "ENTER"
+x0577: x0409       163:                  BRz  Done1
+x0578: x264c       164:                  LD  R3,TOINT     ; Vi konvertere næste input til decimal
+x0579: x10c0       165:                  ADD  R0, R3, R0  ; Lægger inputtet til den konverterede værdi for at få det rigtige input
+x057a: x56e0       166:                  AND  R3, R3, #0  
+x057b: x16e9       167:                  ADD  R3, R3, #9  ; Lægger 9 til R3
+x057c: x1245       171:                  ADD  R1, R1, R5  ; Vi kører loopet 9 gange 
+x057d: x16ff       173:                  ADD  R3, R3, #-1 ; Decrementer counter
+x057e: x03fd       174:                  BRp  Times10Bet
+x057f: x1201       175:                  ADD  R1, R0, R1  ; Vi lægger total sammen med inputtet
+x0580: x0ff2       176:                  BRnzp  StoreBet
+x0581: x6500       179:                  LDR  R2, R4, #0  ; balance ind fra memory
+x0582: x94bf       180:                  NOT  R2, R2      ;inverterer balance
+x0583: x14a1       181:                  ADD  R2, R2, #1  ; Lægger 1 til pga. offset
+x0584: x1481       182:                  ADD  R2, R2, R1 ; tjekker for deposit er mindre en
+x0585: x03e7       183:                  BRp  Again
+x0586: x264c       184:                  LD  R3, Save3
+x0587: x72c0       185:                  STR  R1, R3, #0  
+x0588: x94bf       186:                  NOT  R2, R2      ;inverterer balance
+x0589: x14a1       187:                  ADD  R2, R2, #1
+x058a: x7500       188:                  STR  R2, R4, #0
+x058b: x2a49       189:                  LD  R5, Save5
+x058c: x203d       192:                  LD  R0, Save000 
+x058d: x223d       193:                  LD  R1, Save001
+x058e: x263e       194:                  LD  R3, Save003
+x058f: x2a3e       195:                  LD  R5, Save005
+x0590: x2e3e       196:                  LD  R7, Save007
+x0591: xc1c0       197:                  RET 
+x0592: x323e       201:                  ST  R1, Save1 
+x0593: x343e       202:                  ST  R2, Save2
+x0594: x363e       203:                  ST  R3, Save3
+x0595: x383e       204:                  ST  R4, Save4
+x0596: x3a3e       205:                  ST  R5, Save5
+x0597: x3c3e       206:                  ST  R6, Save6
+x0598: x3e3e       207:                  ST  R7, Save7	
+x0599: x2c2c       209:                  LD  R6, TotalPlayers 
+x059a: x2825       210:                  LD  R4, Balances
+x059b: x302d       211:                  ST  R0, Result
+x059c: x2225       212:                  LD  R1, WheelBets
+x059d: x2623       213:                  LD  R3, Bets
+x059e: x202a       216:                  LD  R0, Result
+x059f: x6440       217:                  LDR  R2, R1, #0 ;loader bet
+x05a0: x94bf       219:                  NOT  R2, R2      ;inverterer bet
+x05a1: x14a1       220:                  ADD  R2, R2, #1
+x05a2: x1402       221:                  ADD  R2, R0, R2
+x05a3: x0a0c       223:                  BRnp  Lost1
+x05a4: x64c0       225:                  LDR  R2, R3, #0  ; bets ind fra memory
+x05a5: x1aa0       226:                  ADD  R5, R2, #0  ; Lægger R2's værdi over i R5 når vi skal addere prize, Ellers vil det stige eksponentielt. 
+x05a6: x103f       227:                  ADD  R0, R0, #-1 ;Decrementer R0 og sætter værdien ind i R4 - Maks antal loop 
+x05a7: x1485       229:                  ADD  R2, R2, R5  
+x05a8: x103f       230:                  ADD  R0, R0, #-1
+x05a9: x0bfd       231:                  BRnp  Loop
+x05aa: x6100       233:                  LDR  R0, R4, #0 ;loader balance
+x05ab: x1080       234:                  ADD  R0, R2, R0
+x05ac: x7100       235:                  STR  R0, R4, #0
+x05ad: x2019       236:                  LD  R0, WinText 
+x05ae: xf022       237:                  PUTS 
+x05af: x0e02       238:                  BRnzp  Finish
+x05b0: x2017       241:                  LD  R0, LossText
+x05b1: xf022       242:                  PUTS 
+x05b2: x1921       245:                  ADD  R4, R4, #1
+x05b3: x16e1       246:                  ADD  R3, R3, #1
+x05b4: x1261       247:                  ADD  R1, R1, #1
+x05b5: x1dbf       248:                  ADD  R6, R6, #-1
+x05b6: x03e7       249:                  BRp  LoopPlayers
+x05b7: x2219       250:                  LD  R1, Save1 
+x05b8: x2419       251:                  LD  R2, Save2
+x05b9: x2619       252:                  LD  R3, Save3
+x05ba: x2819       253:                  LD  R4, Save4
+x05bb: x2a19       254:                  LD  R5, Save5
+x05bc: x2c19       255:                  LD  R6, Save6
+x05bd: x2e19       256:                  LD  R7, Save7	
+x05be: xc1c0       257:                  RET 
+x05bf: x1000       259:       TheWheelSR .FILL  x1000
+x05c0: x05de       260:         Balances .FILL  Balance1
+x05c1: x05e2       261:             Bets .FILL  Bet1
+x05c2: x05e6       262:        WheelBets .FILL  WheelBet1
+x05c3: x06e8       263:          Players .FILL  PlayerOne
+x05c4: x0675       264:       BetNumber1 .FILL  BetNumber
+x05c5: xffd0       265:            TOINT .FILL  x-30
+x05c6: x0000       266:     TotalPlayers .BLKW  1
+x05c7: x069f       267:          WinText .FILL  Won
+x05c8: x06c0       268:         LossText .FILL  Loss
+x05c9: x0000       269:           Result .BLKW  1
+x05ca: x0000       271:          Save000 .BLKW  1
+x05cb: x0000       272:          Save001 .BLKW  1
+x05cc: x0000       273:          Save002 .BLKW  1
+x05cd: x0000       274:          Save003 .BLKW  1
+x05ce: x0000       275:          Save005 .BLKW  1
+x05cf: x0000       276:          Save007 .BLKW  1
+x05d0: x0000       278:            Save0 .BLKW  1
+x05d1: x0000       279:            Save1 .BLKW  1
+x05d2: x0000       280:            Save2 .BLKW  1
+x05d3: x0000       281:            Save3 .BLKW  1
+x05d4: x0000       282:            Save4 .BLKW  1
+x05d5: x0000       283:            Save5 .BLKW  1
+x05d6: x0000       284:            Save6 .BLKW  1
+x05d7: x0000       285:            Save7 .BLKW  1
+x05d8: x0000       287:           Save00 .BLKW  1
+x05d9: x0000       288:           Save01 .BLKW  1
+x05da: x0000       289:           Save02 .BLKW  1
+x05db: x0000       290:           Save03 .BLKW  1
+x05dc: x0000       291:           Save04 .BLKW  1
+x05dd: x0000       292:           Save07 .BLKW  1
+x05de: x0000       294:         Balance1 .BLKW  1
+x05df: x0000       295:         Balance2 .BLKW  1
+x05e0: x0000       296:         Balance3 .BLKW  1
+x05e1: x0000       297:         Balance4 .BLKW  1
+x05e2: x0000       299:             Bet1 .BLKW  1
+x05e3: x0000       300:             Bet2 .BLKW  1
+x05e4: x0000       301:             Bet3 .BLKW  1
+x05e5: x0000       302:             Bet4 .BLKW  1
+x05e6: x0000       304:        WheelBet1 .BLKW  1
+x05e7: x0000       305:        WheelBet2 .BLKW  1
+x05e8: x0000       306:        WheelBet3 .BLKW  1
+x05e9: x0000       307:        WheelBet4 .BLKW  1
+x05ea: x000a       309:            PROMT .STRINGZ  "\nHow many Players are playing from 1-4?\n"
+x05eb: x0048       309:            PROMT  
+x05ec: x006f       309:            PROMT  
+x05ed: x0077       309:            PROMT  
+x05ee: x0020       309:            PROMT  
+x05ef: x006d       309:            PROMT  
+x05f0: x0061       309:            PROMT  
+x05f1: x006e       309:            PROMT  
+x05f2: x0079       309:            PROMT  
+x05f3: x0020       309:            PROMT  
+x05f4: x0050       309:            PROMT  
+x05f5: x006c       309:            PROMT  
+x05f6: x0061       309:            PROMT  
+x05f7: x0079       309:            PROMT  
+x05f8: x0065       309:            PROMT  
+x05f9: x0072       309:            PROMT  
+x05fa: x0073       309:            PROMT  
+x05fb: x0020       309:            PROMT  
+x05fc: x0061       309:            PROMT  
+x05fd: x0072       309:            PROMT  
+x05fe: x0065       309:            PROMT  
+x05ff: x0020       309:            PROMT  
+x0600: x0070       309:            PROMT  
+x0601: x006c       309:            PROMT  
+x0602: x0061       309:            PROMT  
+x0603: x0079       309:            PROMT  
+x0604: x0069       309:            PROMT  
+x0605: x006e       309:            PROMT  
+x0606: x0067       309:            PROMT  
+x0607: x0020       309:            PROMT  
+x0608: x0066       309:            PROMT  
+x0609: x0072       309:            PROMT  
+x060a: x006f       309:            PROMT  
+x060b: x006d       309:            PROMT  
+x060c: x0020       309:            PROMT  
+x060d: x0031       309:            PROMT  
+x060e: x002d       309:            PROMT  
+x060f: x0034       309:            PROMT  
+x0610: x003f       309:            PROMT  
+x0611: x000a       309:            PROMT  
+x0612: x0000       309:            PROMT  
+x0613: x000a       310:            INTRO .STRINGZ  "\nPlease enter your player name:\n"
+x0614: x0050       310:            INTRO  
+x0615: x006c       310:            INTRO  
+x0616: x0065       310:            INTRO  
+x0617: x0061       310:            INTRO  
+x0618: x0073       310:            INTRO  
+x0619: x0065       310:            INTRO  
+x061a: x0020       310:            INTRO  
+x061b: x0065       310:            INTRO  
+x061c: x006e       310:            INTRO  
+x061d: x0074       310:            INTRO  
+x061e: x0065       310:            INTRO  
+x061f: x0072       310:            INTRO  
+x0620: x0020       310:            INTRO  
+x0621: x0079       310:            INTRO  
+x0622: x006f       310:            INTRO  
+x0623: x0075       310:            INTRO  
+x0624: x0072       310:            INTRO  
+x0625: x0020       310:            INTRO  
+x0626: x0070       310:            INTRO  
+x0627: x006c       310:            INTRO  
+x0628: x0061       310:            INTRO  
+x0629: x0079       310:            INTRO  
+x062a: x0065       310:            INTRO  
+x062b: x0072       310:            INTRO  
+x062c: x0020       310:            INTRO  
+x062d: x006e       310:            INTRO  
+x062e: x0061       310:            INTRO  
+x062f: x006d       310:            INTRO  
+x0630: x0065       310:            INTRO  
+x0631: x003a       310:            INTRO  
+x0632: x000a       310:            INTRO  
+x0633: x0000       310:            INTRO  
+x0634: x000a       311:   DepositBalance .STRINGZ  "\nPlease enter your Balance:\n"
+x0635: x0050       311:   DepositBalance  
+x0636: x006c       311:   DepositBalance  
+x0637: x0065       311:   DepositBalance  
+x0638: x0061       311:   DepositBalance  
+x0639: x0073       311:   DepositBalance  
+x063a: x0065       311:   DepositBalance  
+x063b: x0020       311:   DepositBalance  
+x063c: x0065       311:   DepositBalance  
+x063d: x006e       311:   DepositBalance  
+x063e: x0074       311:   DepositBalance  
+x063f: x0065       311:   DepositBalance  
+x0640: x0072       311:   DepositBalance  
+x0641: x0020       311:   DepositBalance  
+x0642: x0079       311:   DepositBalance  
+x0643: x006f       311:   DepositBalance  
+x0644: x0075       311:   DepositBalance  
+x0645: x0072       311:   DepositBalance  
+x0646: x0020       311:   DepositBalance  
+x0647: x0042       311:   DepositBalance  
+x0648: x0061       311:   DepositBalance  
+x0649: x006c       311:   DepositBalance  
+x064a: x0061       311:   DepositBalance  
+x064b: x006e       311:   DepositBalance  
+x064c: x0063       311:   DepositBalance  
+x064d: x0065       311:   DepositBalance  
+x064e: x003a       311:   DepositBalance  
+x064f: x000a       311:   DepositBalance  
+x0650: x0000       311:   DepositBalance  
+x0651: x000a       312:       DepositBet .STRINGZ  "\nHow much money do you want to bet\n"
+x0652: x0048       312:       DepositBet  
+x0653: x006f       312:       DepositBet  
+x0654: x0077       312:       DepositBet  
+x0655: x0020       312:       DepositBet  
+x0656: x006d       312:       DepositBet  
+x0657: x0075       312:       DepositBet  
+x0658: x0063       312:       DepositBet  
+x0659: x0068       312:       DepositBet  
+x065a: x0020       312:       DepositBet  
+x065b: x006d       312:       DepositBet  
+x065c: x006f       312:       DepositBet  
+x065d: x006e       312:       DepositBet  
+x065e: x0065       312:       DepositBet  
+x065f: x0079       312:       DepositBet  
+x0660: x0020       312:       DepositBet  
+x0661: x0064       312:       DepositBet  
+x0662: x006f       312:       DepositBet  
+x0663: x0020       312:       DepositBet  
+x0664: x0079       312:       DepositBet  
+x0665: x006f       312:       DepositBet  
+x0666: x0075       312:       DepositBet  
+x0667: x0020       312:       DepositBet  
+x0668: x0077       312:       DepositBet  
+x0669: x0061       312:       DepositBet  
+x066a: x006e       312:       DepositBet  
+x066b: x0074       312:       DepositBet  
+x066c: x0020       312:       DepositBet  
+x066d: x0074       312:       DepositBet  
+x066e: x006f       312:       DepositBet  
+x066f: x0020       312:       DepositBet  
+x0670: x0062       312:       DepositBet  
+x0671: x0065       312:       DepositBet  
+x0672: x0074       312:       DepositBet  
+x0673: x000a       312:       DepositBet  
+x0674: x0000       312:       DepositBet  
+x0675: x000a       313:        BetNumber .STRINGZ  "\nWhich number do you want to bet on? 1-6\n"
+x0676: x0057       313:        BetNumber  
+x0677: x0068       313:        BetNumber  
+x0678: x0069       313:        BetNumber  
+x0679: x0063       313:        BetNumber  
+x067a: x0068       313:        BetNumber  
+x067b: x0020       313:        BetNumber  
+x067c: x006e       313:        BetNumber  
+x067d: x0075       313:        BetNumber  
+x067e: x006d       313:        BetNumber  
+x067f: x0062       313:        BetNumber  
+x0680: x0065       313:        BetNumber  
+x0681: x0072       313:        BetNumber  
+x0682: x0020       313:        BetNumber  
+x0683: x0064       313:        BetNumber  
+x0684: x006f       313:        BetNumber  
+x0685: x0020       313:        BetNumber  
+x0686: x0079       313:        BetNumber  
+x0687: x006f       313:        BetNumber  
+x0688: x0075       313:        BetNumber  
+x0689: x0020       313:        BetNumber  
+x068a: x0077       313:        BetNumber  
+x068b: x0061       313:        BetNumber  
+x068c: x006e       313:        BetNumber  
+x068d: x0074       313:        BetNumber  
+x068e: x0020       313:        BetNumber  
+x068f: x0074       313:        BetNumber  
+x0690: x006f       313:        BetNumber  
+x0691: x0020       313:        BetNumber  
+x0692: x0062       313:        BetNumber  
+x0693: x0065       313:        BetNumber  
+x0694: x0074       313:        BetNumber  
+x0695: x0020       313:        BetNumber  
+x0696: x006f       313:        BetNumber  
+x0697: x006e       313:        BetNumber  
+x0698: x003f       313:        BetNumber  
+x0699: x0020       313:        BetNumber  
+x069a: x0031       313:        BetNumber  
+x069b: x002d       313:        BetNumber  
+x069c: x0036       313:        BetNumber  
+x069d: x000a       313:        BetNumber  
+x069e: x0000       313:        BetNumber  
+x069f: x000a       316:              Won .STRINGZ  "\nCongratulations, You have won!\n"
+x06a0: x0043       316:              Won  
+x06a1: x006f       316:              Won  
+x06a2: x006e       316:              Won  
+x06a3: x0067       316:              Won  
+x06a4: x0072       316:              Won  
+x06a5: x0061       316:              Won  
+x06a6: x0074       316:              Won  
+x06a7: x0075       316:              Won  
+x06a8: x006c       316:              Won  
+x06a9: x0061       316:              Won  
+x06aa: x0074       316:              Won  
+x06ab: x0069       316:              Won  
+x06ac: x006f       316:              Won  
+x06ad: x006e       316:              Won  
+x06ae: x0073       316:              Won  
+x06af: x002c       316:              Won  
+x06b0: x0020       316:              Won  
+x06b1: x0059       316:              Won  
+x06b2: x006f       316:              Won  
+x06b3: x0075       316:              Won  
+x06b4: x0020       316:              Won  
+x06b5: x0068       316:              Won  
+x06b6: x0061       316:              Won  
+x06b7: x0076       316:              Won  
+x06b8: x0065       316:              Won  
+x06b9: x0020       316:              Won  
+x06ba: x0077       316:              Won  
+x06bb: x006f       316:              Won  
+x06bc: x006e       316:              Won  
+x06bd: x0021       316:              Won  
+x06be: x000a       316:              Won  
+x06bf: x0000       316:              Won  
+x06c0: x000a       317:             Loss .STRINGZ  "\nYou have lost. Better luck next time!\n"
+x06c1: x0059       317:             Loss  
+x06c2: x006f       317:             Loss  
+x06c3: x0075       317:             Loss  
+x06c4: x0020       317:             Loss  
+x06c5: x0068       317:             Loss  
+x06c6: x0061       317:             Loss  
+x06c7: x0076       317:             Loss  
+x06c8: x0065       317:             Loss  
+x06c9: x0020       317:             Loss  
+x06ca: x006c       317:             Loss  
+x06cb: x006f       317:             Loss  
+x06cc: x0073       317:             Loss  
+x06cd: x0074       317:             Loss  
+x06ce: x002e       317:             Loss  
+x06cf: x0020       317:             Loss  
+x06d0: x0042       317:             Loss  
+x06d1: x0065       317:             Loss  
+x06d2: x0074       317:             Loss  
+x06d3: x0074       317:             Loss  
+x06d4: x0065       317:             Loss  
+x06d5: x0072       317:             Loss  
+x06d6: x0020       317:             Loss  
+x06d7: x006c       317:             Loss  
+x06d8: x0075       317:             Loss  
+x06d9: x0063       317:             Loss  
+x06da: x006b       317:             Loss  
+x06db: x0020       317:             Loss  
+x06dc: x006e       317:             Loss  
+x06dd: x0065       317:             Loss  
+x06de: x0078       317:             Loss  
+x06df: x0074       317:             Loss  
+x06e0: x0020       317:             Loss  
+x06e1: x0074       317:             Loss  
+x06e2: x0069       317:             Loss  
+x06e3: x006d       317:             Loss  
+x06e4: x0065       317:             Loss  
+x06e5: x0021       317:             Loss  
+x06e6: x000a       317:             Loss  
+x06e7: x0000       317:             Loss  
+x06e8: x0000       319:        PlayerOne .BLKW  12
+x06e9: x0000       319:        PlayerOne  
+x06ea: x0000       319:        PlayerOne  
+x06eb: x0000       319:        PlayerOne  
+x06ec: x0000       319:        PlayerOne  
+x06ed: x0000       319:        PlayerOne  
+x06ee: x0000       319:        PlayerOne  
+x06ef: x0000       319:        PlayerOne  
+x06f0: x0000       319:        PlayerOne  
+x06f1: x0000       319:        PlayerOne  
+x06f2: x0000       319:        PlayerOne  
+x06f3: x0000       319:        PlayerOne  
+x06f4: x0000       320:        PlayerTwo .BLKW  12
+x06f5: x0000       320:        PlayerTwo  
+x06f6: x0000       320:        PlayerTwo  
+x06f7: x0000       320:        PlayerTwo  
+x06f8: x0000       320:        PlayerTwo  
+x06f9: x0000       320:        PlayerTwo  
+x06fa: x0000       320:        PlayerTwo  
+x06fb: x0000       320:        PlayerTwo  
+x06fc: x0000       320:        PlayerTwo  
+x06fd: x0000       320:        PlayerTwo  
+x06fe: x0000       320:        PlayerTwo  
+x06ff: x0000       320:        PlayerTwo  
+x0700: x0000       321:      PlayerThree .BLKW  12
+x0701: x0000       321:      PlayerThree  
+x0702: x0000       321:      PlayerThree  
+x0703: x0000       321:      PlayerThree  
+x0704: x0000       321:      PlayerThree  
+x0705: x0000       321:      PlayerThree  
+x0706: x0000       321:      PlayerThree  
+x0707: x0000       321:      PlayerThree  
+x0708: x0000       321:      PlayerThree  
+x0709: x0000       321:      PlayerThree  
+x070a: x0000       321:      PlayerThree  
+x070b: x0000       321:      PlayerThree  
+x070c: x0000       322:       PlayerFour .BLKW  12
+x070d: x0000       322:       PlayerFour  
+x070e: x0000       322:       PlayerFour  
+x070f: x0000       322:       PlayerFour  
+x0710: x0000       322:       PlayerFour  
+x0711: x0000       322:       PlayerFour  
+x0712: x0000       322:       PlayerFour  
+x0713: x0000       322:       PlayerFour  
+x0714: x0000       322:       PlayerFour  
+x0715: x0000       322:       PlayerFour  
+x0716: x0000       322:       PlayerFour  
+x0717: x0000       322:       PlayerFour  
